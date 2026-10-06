@@ -1,0 +1,16 @@
+.build/
+.swiftpm/
+*.xcodeproj
+DerivedData/
+build/
+*.app
+
+# Never commit captured data or keys
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+*.db
+exports/
+.env
+.venv/
+logs/

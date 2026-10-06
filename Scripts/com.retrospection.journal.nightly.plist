@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.retrospection.journal.nightly</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>/Users/marcusarocha/Projects/Code/retrospection-journal/Scripts/run_nightly.sh</string>
+    </array>
+    <!-- Fire several times a day. The 4am cutoff means a day isn't complete until 4am; firing at 5am,
+         11am, and 5pm guarantees at least one run after the rollover while the Mac is awake. Catch-up
+         is idempotent, so the redundant fires are free no-ops. -->
+    <key>StartCalendarInterval</key>
+    <array>
+        <dict>
+            <key>Hour</key><integer>5</integer>
+            <key>Minute</key><integer>0</integer>
+        </dict>
+        <dict>
+            <key>Hour</key><integer>11</integer>
+            <key>Minute</key><integer>0</integer>
+        </dict>
+        <dict>
+            <key>Hour</key><integer>17</integer>
+            <key>Minute</key><integer>0</integer>
+        </dict>
+    </array>
+    <!-- If a run exits non-zero (e.g. network still down past the in-script wait), relaunch it instead
+         of waiting hours for the next scheduled fire. SuccessfulExit=false retries ONLY on failure, so
+         a successful run stops until the next calendar time; ThrottleInterval caps retries to every 5
+         min so it can't spin. -->
+    <key>KeepAlive</key>
+    <dict>
+        <key>SuccessfulExit</key>
+        <false/>
+    </dict>
+    <key>ThrottleInterval</key>
+    <integer>300</integer>
+    <key>StandardOutPath</key>
+    <string>/Users/marcusarocha/Projects/Code/retrospection-journal/logs/launchd.out.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/marcusarocha/Projects/Code/retrospection-journal/logs/launchd.err.log</string>
+</dict>
+</plist>
